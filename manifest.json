@@ -1,0 +1,26 @@
+{
+    "name": "Carnet de Puntos PRL · Elecnor",
+    "short_name": "Carnet PRL",
+    "description": "Gestión de puntos de seguridad PRL para trabajadores de Elecnor",
+    "start_url": "/carnet-puntos.html",
+    "display": "standalone",
+    "background_color": "#003C88",
+    "theme_color": "#003C88",
+    "orientation": "portrait",
+    "lang": "es",
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["business", "productivity"]
+}
