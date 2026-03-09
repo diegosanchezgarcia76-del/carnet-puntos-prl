@@ -3826,6 +3826,7 @@ body {
                         <select id="role-filter" onchange="filterWorkers()">
                             <option value="all">Todos los roles</option>
                             <option value="worker">Trabajadores</option>
+                            <option value="visor">Visores</option>
                             <option value="admin">Administradores</option>
                         </select>
                     </div>
@@ -4173,6 +4174,7 @@ body {
             <label>Rol del usuario <span style="color: #EF4444;">*</span></label>
             <select id="new-worker-role" style="width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #CCCCCC; border-radius: 4px;" onchange="toggleWorkerFields()">
                 <option value="worker" selected>👷 Trabajador (solo consulta)</option>
+                <option value="visor">👁️ Visor (todo menos puntos)</option>
                 <option value="admin">🛡️ Administrador (gestión completa)</option>
             </select>
             
@@ -4220,6 +4222,7 @@ body {
             <label>Rol</label>
             <select id="edit-worker-role" onchange="toggleEditWorkerFields()">
                 <option value="worker">👷 Trabajador</option>
+                <option value="visor">👁️ Visor</option>
                 <option value="admin">🛡️ Administrador</option>
             </select>
             
@@ -4808,8 +4811,10 @@ body {
             
             console.log('Worker encontrado:', worker.name, 'Rol:', worker.role);
             
-            if (worker.role === 'admin') {
-                alert('Detectado rol de Administrador. Redirigiendo al panel de administración...');
+            if (worker.role === 'admin' || worker.role === 'visor') {
+                window.currentUserRole = worker.role;
+                var rolLabel = worker.role === 'visor' ? 'Visor' : 'Administrador';
+                alert('Detectado rol de ' + rolLabel + '. Redirigiendo al panel...');
                 
                 hideAllScreens();
                 
@@ -4822,6 +4827,9 @@ body {
                     if (userNameEl) userNameEl.textContent = worker.name;
                     
                     showAdminPage('dashboard');
+
+                    // Aplicar restricciones de visor DESPUÉS de mostrar el panel
+                    setTimeout(applyVisorRestrictions, 200);
                 }
                 
                 emailInput.value = '';
@@ -4864,28 +4872,45 @@ body {
                 alert('Introduce un correo');
                 return;
             }
+
+            // Verificar que el correo existe y tiene rol admin o visor
+            if (!window.workersList || workersList.length === 0) loadWorkers();
+
+            var worker = workersList.find(function(w) {
+                return w.email && w.email.toLowerCase() === email.toLowerCase();
+            });
+
+            if (!worker) {
+                alert('Usuario no encontrado. Verifica tu correo.');
+                return;
+            }
+
+            if (worker.role !== 'admin' && worker.role !== 'visor') {
+                alert('No tienes permisos para acceder al panel de administración.');
+                return;
+            }
+
+            window.currentUserRole = worker.role;
             
             hideAllScreens();
             
-            var name = email.split('@')[0];
-            name = name.charAt(0).toUpperCase() + name.slice(1);
             var userNameEl = document.getElementById('admin-user-name');
-            if (userNameEl) userNameEl.textContent = name;
+            if (userNameEl) userNameEl.textContent = worker.name;
             var avatarEl = document.getElementById('admin-avatar-initials');
-            if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+            if (avatarEl) avatarEl.textContent = worker.name.charAt(0).toUpperCase();
             
             var appDiv = document.getElementById('admin-app');
             if (appDiv) {
                 appDiv.classList.remove('hidden');
                 appDiv.style.display = 'flex';
-                console.log('✅ Admin app mostrada correctamente');
+                console.log('Admin app mostrada correctamente');
             } else {
-                console.error('❌ ERROR CRÍTICO: No existe admin-app en el DOM');
                 alert('Error: No se encontró el panel de administrador');
                 return;
             }
             
             showAdminPage('dashboard');
+            setTimeout(applyVisorRestrictions, 200);
             
             emailInput.value = '';
         }
@@ -5134,7 +5159,27 @@ function animateValue(element, start, end, duration) {
         // 7. ADMIN APP - NAVEGACIÓN ENTRE PÁGINAS
         // ============================================
 
+        function applyVisorRestrictions() {
+            if (window.currentUserRole === 'visor') {
+                var assignNav = document.getElementById('admin-nav-assign');
+                if (assignNav) assignNav.style.display = 'none';
+                var configNav = document.getElementById('admin-nav-config');
+                if (configNav) configNav.style.display = 'none';
+                var btnNew = document.querySelector('.btn-new');
+                if (btnNew) btnNew.style.display = 'none';
+                var btnImportVisible = document.querySelector('[onclick*="import-excel-input"]');
+                if (btnImportVisible) btnImportVisible.style.display = 'none';
+                var exportBtn = document.querySelector('.btn-export-excel');
+                if (exportBtn) exportBtn.style.display = 'none';
+            }
+        }
+
         function showAdminPage(page) {
+            // Visor no puede acceder a asignar puntos ni configuración
+            if (window.currentUserRole === 'visor' && (page === 'assign' || page === 'config')) {
+                alert('No tienes permisos para acceder a esta sección.');
+                return;
+            }
             var sidebar = document.querySelector('.admin-sidebar');
             if (sidebar) sidebar.style.display = 'flex';
             var adminMain = document.querySelector('.admin-main');
@@ -5190,6 +5235,9 @@ function animateValue(element, start, end, duration) {
                 case 'assign':        loadAssignWorkers(); updateAssignConceptsSelect(); break;
                 case 'authorizations': loadAuthWorkersSelect(); resetAuthView(); break;
             }
+
+            // Aplicar restricciones de visor en cada navegación
+            setTimeout(applyVisorRestrictions, 50);
         }
 
         function mostrarSeccionReportes() {
@@ -5369,7 +5417,7 @@ function animateValue(element, start, end, duration) {
                     '<div style="font-size:0.75rem; color:#666666;">' + worker.email + '</div></div></td>' +
                     '<td>' + (worker.delegation || '-') + '</td>' +
                     '<td>' + (worker.role === 'admin' ? '-' : worker.points) + '</td>' +
-                    '<td>' + (worker.role === 'admin' ? '<span class="admin-badge" style="background:#EDE9FE;color:#7C3AED;">Administrador</span>' : '<span class="admin-badge ' + levelInfo.class + '">' + levelInfo.name + '</span>') + '</td>' +
+                    '<td>' + (worker.role === 'admin' ? '<span class="admin-badge" style="background:#EDE9FE;color:#7C3AED;">Administrador</span>' : worker.role === 'visor' ? '<span class="admin-badge" style="background:#DBEAFE;color:#1D4ED8;">Visor</span>' : '<span class="admin-badge ' + levelInfo.class + '">' + levelInfo.name + '</span>') + '</td>' +
                     '<td><span class="admin-badge ' + (worker.status === 'Activo' ? 'activo' : 'inactivo') + '">' + worker.status + '</span></td>' +
                     '<td class="admin-actions"><button onclick="showEditWorkerModal(' + worker.id + ')" title="Editar">✏️</button></td>';
                 tbody.appendChild(row);
@@ -7095,8 +7143,8 @@ function animateValue(element, start, end, duration) {
                             return w.name.toLowerCase() === nombre.toLowerCase();
                         });
                         if (existe) { duplicados++; continue; }
-                        var rolExcel = (row[4] || '').toString().trim().toLowerCase();
-                        var esAdmin = rolExcel.includes('admin') || rolExcel.includes('mando');
+                        var rolExcelVal = (row[4] || '').toString().trim().toLowerCase();
+                        var esAdmin = rolExcelVal.includes('admin') || rolExcelVal.includes('mando');
                         maxId++;
                         workersList.push({
                             id: maxId,
