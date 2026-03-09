@@ -2923,6 +2923,7 @@ body {
 
 .role-icon.worker { background: #DBEAFE; }
 .role-icon.admin { background: #EDE9FE; }
+.role-icon.visor { background: #CFFAFE; }
 .role-icon.custom { background: #F3E8FF; }
 
 .role-name {
@@ -4079,7 +4080,7 @@ body {
                     <span class="config-icon">🛡️</span>
                     <h3>Roles del Sistema</h3>
                 </div>
-                <button onclick="showNewRoleModal()" style="background:#F47C00;color:#F47C00;border-bottom: 3px solid #F47C00;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:6px;">
+                <button onclick="showNewRoleModal()" style="background:#F47C00;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:6px;">
                     <span>➕</span> Nuevo Rol
                 </button>
             </div>
@@ -6711,6 +6712,22 @@ function animateValue(element, start, end, duration) {
                 }
             },
             {
+                id: 'visor',
+                name: 'Visor PRL',
+                description: 'Acceso de solo lectura al panel de administración. Puede ver trabajadores y reportes, pero no asignar puntos ni modificar datos',
+                color: '#06B6D4',
+                isSystem: true,
+                icon: '👁️',
+                permissions: {
+                    viewPoints: true,
+                    assignPoints: false,
+                    manageWorkers: false,
+                    manageAuth: false,
+                    viewReports: true,
+                    config: false
+                }
+            },
+            {
                 id: 'admin',
                 name: 'Administrador PRL',
                 description: 'Gestor completo del sistema con acceso a todas las funcionalidades',
@@ -6752,7 +6769,7 @@ function animateValue(element, start, end, duration) {
             var cardClass = role.isSystem ? 'default' : 'custom';
             var badgeClass = role.isSystem ? 'system' : 'custom';
             var badgeText = role.isSystem ? 'Sistema' : 'Personalizado';
-            var iconClass = role.id === 'worker' ? 'worker' : (role.id === 'admin' ? 'admin' : 'custom');
+            var iconClass = role.id === 'worker' ? 'worker' : (role.id === 'admin' ? 'admin' : (role.id === 'visor' ? 'visor' : 'custom'));
             
             var permsHtml = '';
             var perms = [
