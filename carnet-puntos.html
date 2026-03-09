@@ -916,13 +916,17 @@ body {
     align-items: center;
 }
 .logo-elecnor {
-    width: 100px;
+    width: 110px;
     height: auto;
     filter: none;
-    opacity: 0.9;
+    opacity: 1;
     transition: opacity 0.2s;
+    background: white;
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: block;
 }
-.logo-elecnor:hover { opacity: 1; }
+.logo-elecnor:hover { opacity: 0.9; }
 
 /* Info usuario en sidebar */
 .user-info {
@@ -3166,7 +3170,7 @@ body {
             <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
                 <div>
                     <p style="margin: 0; color: #94A3B8; font-size: 13px; font-weight: 500;">¡Hola de nuevo! 👋</p>
-                    <h1 id="worker-first-name" style="margin: 3px 0 0 0; color: #1E293B; font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">Diego</h1>
+                    <h1 id="worker-first-name" style="margin: 3px 0 0 0; color: #1E293B; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">Diego</h1>
                 </div>
                 <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #003C88, #0051A2); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,60,136,0.25);" id="worker-avatar-home">D</div>
             </div>
@@ -3357,7 +3361,7 @@ body {
                         </div>
                         <div>
                             <p style="margin: 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Correo electrónico</p>
-                            <p id="worker-email" style="margin: 4px 0 0 0; color: #1E293B; font-size: 14px; font-weight: 500;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6c081f0d020f0409160b0d1e0f050d2c0900090f02031e42091f">[email&#160;protected]</a></p>
+                            <p id="worker-email-display" style="margin: 4px 0 0 0; color: #1E293B; font-size: 14px; font-weight: 500;"></p>
                         </div>
                     </div>
 
@@ -3392,48 +3396,11 @@ body {
             <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h3 style="margin: 0; color: #1E293B; font-size: 16px; font-weight: 700;">📜 Autorizaciones Vigentes</h3>
-                    <span style="background: #DCFCE7; color: #166534; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px;">1 activa</span>
+                    <span id="worker-auths-badge" style="background: #DCFCE7; color: #166534; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px;">0 activas</span>
                 </div>
 
-                <!-- Lista de autorizaciones -->
+                <!-- Lista de autorizaciones (se rellena dinámicamente) -->
                 <div id="worker-auths-list" style="display: flex; flex-direction: column; gap: 12px;">
-                    
-                    <!-- Autorización 1 -->
-                    <div style="background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); border-radius: 16px; padding: 20px; border: 1px solid #93C5FD; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; background: rgba(255,255,255,0.3); border-radius: 50%;"></div>
-                        
-                        <div style="display: flex; align-items: center; gap: 16px; position: relative; z-index: 1;">
-                            <div style="width: 56px; height: 56px; background: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                                🛡️
-                            </div>
-                            <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                    <span style="background: #003C88; color: white; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px;">RP</span>
-                                    <span style="color: #1E40AF; font-size: 14px; font-weight: 600;">Recurso Preventivo</span>
-                                </div>
-                                <div style="display: flex; gap: 16px; margin-top: 8px;">
-                                    <div>
-                                        <p style="margin: 0; color: #3B82F6; font-size: 10px; font-weight: 600; text-transform: uppercase;">Expedición</p>
-                                        <p style="margin: 2px 0 0 0; color: #1E293B; font-size: 13px; font-weight: 500;">15/01/2024</p>
-                                    </div>
-                                    <div>
-                                        <p style="margin: 0; color: #3B82F6; font-size: 10px; font-weight: 600; text-transform: uppercase;">Caducidad</p>
-                                        <p style="margin: 2px 0 0 0; color: #1E293B; font-size: 13px; font-weight: 500;">15/01/2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="text-align: center;">
-                                <div style="width: 12px; height: 12px; background: #22C55E; border-radius: 50%; margin: 0 auto 4px; box-shadow: 0 0 0 3px rgba(34,197,94,0.3);"></div>
-                                <span style="font-size: 10px; color: #22C55E; font-weight: 600;">VIGENTE</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Placeholder para más autorizaciones -->
-                    <div style="background: #F8FAFC; border: 2px dashed #CBD5E1; border-radius: 16px; padding: 24px; text-align: center; opacity: 0.7;">
-                        <div style="font-size: 32px; margin-bottom: 8px; color: #94A3B8;">📋</div>
-                        <p style="margin: 0; color: #64748B; font-size: 13px;">No hay más autorizaciones vigentes</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -4924,18 +4891,16 @@ function updateWorkerUI(worker) {
     
     var currentPoints = parseInt(worker.points) || 0;
     
-    // Actualizar nombre (primero nombre, luego apellidos)
-    var nameParts = (worker.name || 'Trabajador').split(' ');
-    var firstName = nameParts[nameParts.length - 1] || nameParts[0] || 'Trabajador';
+    // Actualizar nombre (nombre completo)
     var fullName = worker.name || 'Trabajador';
     
     var firstNameEl = document.getElementById('worker-first-name');
     var fullNameEl = document.getElementById('worker-full-name');
     var initialsEl = document.getElementById('worker-initials');
-    var emailEl = document.getElementById('worker-email');
+    var emailEl = document.getElementById('worker-email-display');
     var delegationEl = document.getElementById('worker-delegation-text');
     
-    if (firstNameEl) firstNameEl.textContent = firstName;
+    if (firstNameEl) firstNameEl.textContent = fullName;
     if (fullNameEl) fullNameEl.textContent = fullName;
     if (initialsEl) initialsEl.textContent = getInitials(fullName);
     if (emailEl) emailEl.textContent = worker.email || '';
@@ -5031,7 +4996,7 @@ function renderWorkerAuths(worker) {
     });
     
     // Actualizar badge de contador
-    var countBadge = document.querySelector('#worker-tab-perfil [style*="background: #DCFCE7"]');
+    var countBadge = document.getElementById('worker-auths-badge');
     if (countBadge) countBadge.textContent = validAuths.length + ' activa' + (validAuths.length !== 1 ? 's' : '');
     
     if (validAuths.length === 0) {
