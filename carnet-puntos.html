@@ -3738,7 +3738,7 @@ body.dark-mode .filter-chip { background: rgba(244,124,0,0.15); }
                         </div>
                         <div>
                             <p style="margin: 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Puntos actuales</p>
-                            <p style="margin: 4px 0 0 0; color: #22C55E; font-size: 20px; font-weight: 700;">35 pts</p>
+                            <p id="worker-profile-points" style="margin: 4px 0 0 0; color: #22C55E; font-size: 20px; font-weight: 700;">— pts</p>
                         </div>
                     </div>
                 </div>
@@ -5297,6 +5297,10 @@ function updateWorkerUI(worker) {
     if (initialsEl) initialsEl.textContent = getInitials(fullName);
     if (emailEl) emailEl.textContent = worker.email || '';
     if (delegationEl) delegationEl.textContent = worker.delegation || '';
+
+    // Puntos en la tarjeta de perfil (pestaña Perfil)
+    var profilePtsEl = document.getElementById('worker-profile-points');
+    if (profilePtsEl) profilePtsEl.textContent = currentPoints + ' pts';
 
     // Delegación en el hero del carnet
     var delegationHero = document.getElementById('worker-delegation-hero');
