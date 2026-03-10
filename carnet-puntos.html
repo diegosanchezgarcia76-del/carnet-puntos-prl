@@ -16,57 +16,54 @@
 </script>
     <style>
 
-   /* ============================================
-   HEADER WORKER - VERSIÓN DEFINITIVA
+/* ============================================
+   0. VARIABLES CSS GLOBALES
    ============================================ */
+:root {
+    --blue-dark:    #001F4D;
+    --blue-main:    #003C88;
+    --blue-mid:     #0051A2;
+    --blue-light:   #EFF6FF;
+    --blue-border:  rgba(0,60,136,0.10);
+
+    --orange:       #F47C00;
+    --orange-dark:  #CC6600;
+    --orange-light: #FFF4E6;
+    --orange-glow:  rgba(244,124,0,0.20);
+
+    --green:        #22C55E;
+    --green-light:  #DCFCE7;
+    --green-text:   #166534;
+    --yellow:       #F59E0B;
+    --red:          #EF4444;
+    --red-light:    #FEE2E2;
+
+    --bg:           #F0F4F8;
+    --surface:      #FFFFFF;
+    --border:       #E2E8F0;
+    --text:         #1E293B;
+    --text-muted:   #64748B;
+    --text-faint:   #94A3B8;
+
+    --radius-sm:    8px;
+    --radius:       12px;
+    --radius-lg:    20px;
+    --radius-xl:    28px;
+
+    --shadow-sm:    0 1px 4px rgba(0,60,136,0.06), 0 4px 16px rgba(0,60,136,0.04);
+    --shadow:       0 4px 20px rgba(0,60,136,0.10);
+    --shadow-lg:    0 12px 40px rgba(0,60,136,0.18);
+    --shadow-card:  0 1px 0 #E8EDF2, 0 2px 12px rgba(0,60,136,0.06);
+
+    --transition:   0.18s ease;
+    --font:         'Segoe UI', system-ui, -apple-system, sans-serif;
+}
 
 /* ============================================
-   HEADER WORKER - LOGOS OFICIALES
+   1. RESET Y BASE
    ============================================ */
-.worker-app-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 15px 20px !important;
-    background: #FFFFFF !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    position: relative !important;
-    z-index: 10 !important;
-}
+* { box-sizing: border-box; }
 
-.worker-logo-elecnor {
-    height: 40px !important;  /* Aumentado ligeramente */
-    display: flex !important;
-    align-items: center !important;
-}
-
-.worker-logo-elecnor svg {
-    height: 40px !important;
-    width: auto !important;
-    display: block !important;
-}
-
-.worker-logo-sst {
-    height: 45px !important;
-    display: flex !important;
-    align-items: center !important;
-}
-
-.worker-logo-sst svg {
-    height: 45px !important;
-    width: auto !important;
-    display: block !important;
-}
-/* ============================================
-   1. RESET Y BASE - PULIDO GLOBAL
-   ============================================ */
-* {
-    box-sizing: border-box;
-}
-
-/* Scrollbar personalizada */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(0,60,136,0.15); border-radius: 10px; }
@@ -74,11 +71,68 @@
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background-color: #F0F4F8;
-    color: #1E293B;
+    font-family: var(--font);
+    background-color: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   LOGOS HEADER WORKER
+   ============================================ */
+.worker-logo-elecnor {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+.worker-logo-elecnor svg { height: 40px; width: auto; display: block; }
+.worker-logo-sst { height: 45px; display: flex; align-items: center; }
+.worker-logo-sst svg { height: 45px; width: auto; display: block; }
+
+/* ============================================
+   TOAST NOTIFICATIONS (reemplaza alert())
+   ============================================ */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+.toast {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 280px;
+    max-width: 360px;
+    pointer-events: all;
+    animation: toastIn 0.32s cubic-bezier(0.34,1.56,0.64,1) both;
+    border-left: 4px solid var(--blue-main);
+}
+.toast.toast-success { border-left-color: var(--green); }
+.toast.toast-error   { border-left-color: var(--red); }
+.toast.toast-warning { border-left-color: var(--yellow); }
+.toast.toast-out { animation: toastOut 0.25s ease forwards; }
+.toast-icon { font-size: 1.2rem; flex-shrink: 0; }
+.toast-msg  { font-size: 0.875rem; color: var(--text); font-weight: 500; flex: 1; line-height: 1.4; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(40px) scale(0.92); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastOut {
+    to { opacity: 0; transform: translateX(40px) scale(0.9); }
+}
+@media (max-width: 480px) {
+    #toast-container { top: auto; bottom: 90px; right: 12px; left: 12px; }
+    .toast { min-width: 0; max-width: 100%; }
 }
 
 .hidden { display: none !important; }
@@ -975,7 +1029,7 @@ body {
     margin-left: 240px;
     flex: 1;
     min-height: 100vh;
-    background: #F0F4F8;
+    background: var(--bg);
     padding: 0;
     box-sizing: border-box;
     display: flex;
@@ -984,13 +1038,13 @@ body {
 
 /* Header del área principal */
 .admin-topbar {
-    background: #FFFFFF;
+    background: var(--surface);
     border-bottom: 1px solid #E8EDF3;
     padding: 16px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 1px 8px rgba(0,60,136,0.05);
+    box-shadow: var(--shadow-card);
     position: sticky;
     top: 0;
     z-index: 50;
@@ -998,12 +1052,12 @@ body {
 .admin-topbar-title {
     font-size: 1.2rem;
     font-weight: 800;
-    color: #1E293B;
+    color: var(--text);
     letter-spacing: -0.3px;
 }
 .admin-topbar-sub {
     font-size: 0.8rem;
-    color: #94A3B8;
+    color: var(--text-faint);
     margin-top: 1px;
     font-weight: 400;
 }
@@ -1013,12 +1067,12 @@ body {
     gap: 12px;
 }
 .admin-topbar-badge {
-    background: #F0F4F8;
-    border: 1px solid #E2E8F0;
+    background: var(--bg);
+    border: 1px solid var(--border);
     border-radius: 20px;
     padding: 6px 14px;
     font-size: 0.78rem;
-    color: #64748B;
+    color: var(--text-muted);
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -1026,11 +1080,43 @@ body {
 }
 .admin-topbar-badge span {
     width: 8px; height: 8px;
-    background: #22C55E;
+    background: var(--green);
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0 0 0 2px rgba(34,197,94,0.25);
+    animation: pulse-dot 2s ease infinite;
 }
+@keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.25); }
+    50%       { box-shadow: 0 0 0 4px rgba(34,197,94,0.12); }
+}
+
+/* Botón hamburger (solo mobile) */
+.admin-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px; height: 38px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text);
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+.admin-hamburger:hover { background: var(--border); }
+
+/* Overlay para cerrar sidebar en mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,20,50,0.45);
+    backdrop-filter: blur(2px);
+    z-index: 99;
+}
+.sidebar-overlay.visible { display: block; animation: modalBgIn 0.2s ease both; }
 
 .admin-content-area {
     padding: 28px 32px;
@@ -1038,11 +1124,25 @@ body {
 }
 
 /* Responsive Admin */
-@media (max-width: 768px) {
-    .admin-sidebar { display: none; }
+@media (max-width: 900px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+        z-index: 200;
+    }
+    .admin-sidebar.sidebar-open {
+        transform: translateX(0);
+        box-shadow: 8px 0 40px rgba(0,20,50,0.25);
+    }
     .admin-main { margin-left: 0; }
     .admin-topbar { padding: 14px 16px; }
     .admin-content-area { padding: 16px; }
+    .admin-hamburger { display: flex; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr !important; }
+    .admin-content-area { padding: 12px; }
 }
 
 /* ============================================
@@ -1055,14 +1155,14 @@ body {
 }
 .section-header h2 {
     margin: 0 0 4px 0;
-    color: #1E293B;
+    color: var(--text);
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.4px;
 }
 .section-header p {
     margin: 0;
-    color: #94A3B8;
+    color: var(--text-faint);
     font-size: 0.875rem;
 }
 
@@ -2651,104 +2751,138 @@ body {
 }
 
 /* ============================================
-   12. MODALES
+   12. MODALES — REDISEÑADOS
    ============================================ */
 .modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     display: none;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0,20,50,0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     z-index: 2000;
+    padding: 16px;
 }
-
-.modal.visible {
-    display: flex;
+.modal.visible { display: flex; animation: modalBgIn 0.22s ease both; }
+@keyframes modalBgIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
-
 .modal-content {
-    background-color: #FFFFFF;
-    padding: 24px;
-    border-radius: 12px;
-    max-width: 420px;
-    width: 90%;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    color: #003C88;
+    background: var(--surface);
+    padding: 28px 28px 24px;
+    border-radius: var(--radius-lg);
+    max-width: 460px;
+    width: 100%;
+    box-shadow: 0 24px 64px rgba(0,20,50,0.22), 0 4px 16px rgba(0,0,0,0.08);
+    color: var(--text);
     max-height: 90vh;
     overflow-y: auto;
+    animation: modalContentIn 0.28s cubic-bezier(0.34,1.56,0.64,1) both;
+    border: 1px solid var(--border);
 }
-
+@keyframes modalContentIn {
+    from { opacity: 0; transform: scale(0.94) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
 .modal-content h2 {
-    margin-top: 0;
-    margin-bottom: 16px;
-    color: #003C88;
+    margin: 0 0 20px 0;
+    color: var(--blue-main);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
 }
-
 .modal-content label {
     display: block;
-    margin-bottom: 4px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    margin-bottom: 5px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
-
 .modal-content input,
 .modal-content select {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #CCCCCC;
-    border-radius: 4px;
+    padding: 11px 14px;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
     box-sizing: border-box;
     font-size: 0.9rem;
+    background: #F8FAFC;
+    color: var(--text);
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    font-family: var(--font);
 }
-
+.modal-content input:focus,
+.modal-content select:focus {
+    outline: none;
+    border-color: var(--orange);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px var(--orange-glow);
+}
 .modal-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 16px;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
 }
-
 .modal-cancel {
-    background-color: #F5F8FB;
-    color: #003C88;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 16px;
+    background: var(--bg);
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 18px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all var(--transition);
+    font-family: var(--font);
 }
-
+.modal-cancel:hover {
+    background: var(--border);
+    color: var(--text);
+}
 .modal-save {
-    background-color: #F47C00;
+    background: var(--orange);
     color: #FFFFFF;
     border: none;
-    border-radius: 6px;
-    padding: 10px 16px;
+    border-radius: var(--radius);
+    padding: 10px 22px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    box-shadow: 0 4px 14px var(--orange-glow);
+    transition: all var(--transition);
+    font-family: var(--font);
 }
-
 .modal-save:hover {
-    background-color: #CC6600;
+    background: var(--orange-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(244,124,0,0.35);
 }
-
 .modal-delete {
-    background-color: #FF5B5B;
+    background: var(--red);
     color: #FFFFFF;
     border: none;
-    border-radius: 6px;
-    padding: 10px 16px;
+    border-radius: var(--radius);
+    padding: 10px 18px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: all var(--transition);
+    font-family: var(--font);
 }
-
 .modal-delete:hover {
-    background-color: #D94141;
+    background: #DC2626;
+    transform: translateY(-1px);
 }
 
 /* Modal específico autorizaciones */
@@ -3052,6 +3186,201 @@ body {
     background: #DCFCE7;
     color: #166534;
 }
+
+/* ============================================
+   MODO OSCURO COMPLETO
+   ============================================ */
+body.dark-mode {
+    --bg:           #0F172A;
+    --surface:      #1E293B;
+    --border:       rgba(255,255,255,0.08);
+    --text:         #F1F5F9;
+    --text-muted:   #94A3B8;
+    --text-faint:   #475569;
+    --blue-light:   rgba(0,60,136,0.25);
+    --blue-border:  rgba(100,180,255,0.12);
+    --shadow-sm:    0 1px 4px rgba(0,0,0,0.3);
+    --shadow:       0 4px 20px rgba(0,0,0,0.35);
+    --shadow-lg:    0 12px 40px rgba(0,0,0,0.45);
+    --shadow-card:  0 1px 0 rgba(255,255,255,0.04), 0 2px 12px rgba(0,0,0,0.3);
+}
+body.dark-mode .worker-main-content,
+body.dark-mode #worker-app { background: var(--bg); }
+body.dark-mode .worker-app-header,
+body.dark-mode .worker-bottom-nav,
+body.dark-mode .admin-topbar { background: var(--surface) !important; border-color: var(--border) !important; }
+body.dark-mode .worker-card,
+body.dark-mode .auth-card,
+body.dark-mode .config-card,
+body.dark-mode .admin-table-card,
+body.dark-mode .admin-controls,
+body.dark-mode .top-workers-card,
+body.dark-mode .chart-card { background: var(--surface) !important; border-color: var(--border) !important; }
+body.dark-mode .admin-table-card th { background: rgba(255,255,255,0.04) !important; color: var(--text-faint) !important; }
+body.dark-mode .admin-table-card td { border-color: rgba(255,255,255,0.05) !important; color: var(--text) !important; }
+body.dark-mode .admin-table-card tr:hover td { background: rgba(255,255,255,0.04) !important; }
+body.dark-mode .modal-content { background: #1E293B !important; border-color: rgba(255,255,255,0.1) !important; }
+body.dark-mode .modal-content input,
+body.dark-mode .modal-content select,
+body.dark-mode .filter-group select,
+body.dark-mode .search-input input { background: #0F172A !important; color: var(--text) !important; border-color: rgba(255,255,255,0.12) !important; }
+body.dark-mode .modal-cancel { background: #0F172A !important; color: var(--text-muted) !important; }
+body.dark-mode .points-inner { background: #1E293B; }
+body.dark-mode .config-toggle-item { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06); }
+body.dark-mode .config-toggle-icon { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); }
+body.dark-mode .admin-main { background: var(--bg); }
+body.dark-mode #admin-app { background: var(--bg); }
+body.dark-mode .section-header h2 { color: var(--text); }
+body.dark-mode .stat-card { background: var(--surface) !important; border-color: var(--border) !important; }
+body.dark-mode .stat-value { color: var(--text); }
+body.dark-mode .nav-tab-btn { color: var(--text-faint) !important; }
+body.dark-mode .login-form { background: var(--surface) !important; border-color: var(--border) !important; }
+body.dark-mode .login-form input { background: rgba(255,255,255,0.05) !important; color: var(--text) !important; border-color: rgba(255,255,255,0.12) !important; }
+body.dark-mode .bar-value { background: #334155; color: var(--text); border-color: rgba(255,255,255,0.1); }
+body.dark-mode .auth-history-item { background: rgba(255,255,255,0.04); }
+
+/* Botón dark mode toggle */
+.dark-toggle-btn {
+    position: fixed;
+    bottom: 88px;
+    right: 16px;
+    width: 44px; height: 44px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    z-index: 999;
+    transition: all 0.22s ease;
+}
+.dark-toggle-btn:hover { transform: scale(1.1); }
+#worker-app .dark-toggle-btn { display: flex; }
+#admin-app .dark-toggle-btn { bottom: 24px; right: 24px; }
+
+/* ============================================
+   SKELETON SCREENS
+   ============================================ */
+@keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+}
+.skeleton {
+    background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.4s ease infinite;
+    border-radius: 8px;
+}
+body.dark-mode .skeleton {
+    background: linear-gradient(90deg, #1E293B 25%, #273549 50%, #1E293B 75%);
+    background-size: 600px 100%;
+}
+.skeleton-row { display: flex; gap: 12px; align-items: center; padding: 14px 16px; }
+.skeleton-avatar { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; }
+.skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.skeleton-line { height: 12px; border-radius: 6px; }
+.skeleton-line.short { width: 40%; }
+.skeleton-line.medium { width: 65%; }
+
+/* Loading overlay */
+.loading-overlay {
+    position: absolute; inset: 0;
+    background: var(--surface);
+    border-radius: 20px;
+    display: flex; flex-direction: column; gap: 4px;
+    z-index: 10;
+    overflow: hidden;
+}
+.admin-table-card { position: relative; }
+
+/* ============================================
+   FILTROS MEJORADOS — contador de resultados
+   ============================================ */
+.filter-results-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--blue-light);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    font-size: 0.82rem;
+    color: var(--blue-main);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+body.dark-mode .filter-results-bar { background: rgba(0,60,136,0.2); color: #93C5FD; }
+.filter-results-bar .count { font-size: 1.1rem; font-weight: 800; }
+.filter-clear-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 0.78rem; font-weight: 600;
+    padding: 3px 8px; border-radius: 6px;
+    transition: all var(--transition);
+}
+.filter-clear-btn:hover { background: rgba(239,68,68,0.1); color: var(--red); }
+
+/* Active filter chips */
+.filter-chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 10px;
+}
+.filter-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--orange-light); color: var(--orange);
+    border: 1px solid rgba(244,124,0,0.2);
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 0.75rem; font-weight: 600;
+    cursor: pointer; transition: all var(--transition);
+}
+.filter-chip:hover { background: rgba(244,124,0,0.2); }
+body.dark-mode .filter-chip { background: rgba(244,124,0,0.15); }
+
+/* ============================================
+   GRÁFICAS MEJORADAS — eje Y + tooltips
+   ============================================ */
+.chart-card { position: relative; overflow: visible; }
+.chart-subtitle {
+    font-size: 0.75rem; color: var(--text-faint);
+    margin: -14px 0 16px 0; font-weight: 500;
+}
+.bar-chart-wrapper {
+    position: relative;
+    height: 260px;
+}
+.bar-y-axis {
+    position: absolute; left: 0; top: 0; bottom: 28px;
+    width: 36px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    align-items: flex-end; padding-right: 6px;
+}
+.bar-y-label { font-size: 0.65rem; color: var(--text-faint); font-weight: 500; }
+.bar-chart-area {
+    position: absolute; left: 40px; right: 0; top: 0; bottom: 0;
+    display: flex; align-items: flex-end; gap: 10px; padding: 8px 0 0;
+}
+.bar-grid-lines {
+    position: absolute; left: 40px; right: 0; top: 0; bottom: 28px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    pointer-events: none;
+}
+.bar-grid-line {
+    width: 100%; height: 1px;
+    background: var(--border); opacity: 0.7;
+}
+.bar-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--text); color: var(--surface);
+    font-size: 0.72rem; font-weight: 700;
+    padding: 4px 8px; border-radius: 6px;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transition: opacity 0.15s;
+}
+.bar:hover .bar-tooltip { opacity: 1; }
+
+
 </style>
 </head>
 <body>
@@ -3216,18 +3545,18 @@ body {
             <div style="display: flex; gap: 10px; margin-bottom: 16px;">
                 <div id="chip-excelente" style="flex: 1; background: #DCFCE7; border: 2px solid #22C55E; border-radius: 16px; padding: 14px 8px; text-align: center; transition: all 0.25s ease; cursor: default;">
                     <div style="font-size: 18px; margin-bottom: 4px;">🟢</div>
-                    <div style="font-size: 11px; color: #166534; font-weight: 700;">Excelente</div>
-                    <div style="font-size: 10px; color: #22C55E; margin-top: 2px;">≥25 pts</div>
+                    <div style="font-size: 11px; color: #166534; font-weight: 700;">Muy buena</div>
+                    <div style="font-size: 10px; color: #22C55E; margin-top: 2px;">≥12 pts</div>
                 </div>
                 <div id="chip-regular" style="flex: 1; background: #FEF9C3; border: 2px solid #E2E8F0; border-radius: 16px; padding: 14px 8px; text-align: center; opacity: 0.55; transition: all 0.25s ease; cursor: default;">
                     <div style="font-size: 18px; margin-bottom: 4px;">🟡</div>
-                    <div style="font-size: 11px; color: #854D0E; font-weight: 700;">Regular</div>
-                    <div style="font-size: 10px; color: #A16207; margin-top: 2px;">10-24 pts</div>
+                    <div style="font-size: 11px; color: #854D0E; font-weight: 700;">Aceptable</div>
+                    <div style="font-size: 10px; color: #A16207; margin-top: 2px;">5-11 pts</div>
                 </div>
                 <div id="chip-mejora" style="flex: 1; background: #FEE2E2; border: 2px solid #E2E8F0; border-radius: 16px; padding: 14px 8px; text-align: center; opacity: 0.55; transition: all 0.25s ease; cursor: default;">
                     <div style="font-size: 18px; margin-bottom: 4px;">🔴</div>
-                    <div style="font-size: 11px; color: #991B1B; font-weight: 700;">Mejora</div>
-                    <div style="font-size: 10px; color: #DC2626; margin-top: 2px;">&lt;10 pts</div>
+                    <div style="font-size: 11px; color: #991B1B; font-weight: 700;">Deficiente</div>
+                    <div style="font-size: 10px; color: #DC2626; margin-top: 2px;">≤4 pts</div>
                 </div>
             </div>
 
@@ -3246,6 +3575,9 @@ body {
                         <div style="font-size: 11px; color: #64748B; margin-top: 5px; font-weight: 500;">Autorizaciones</div>
                     </div>
                 </div>
+                <p style="margin: 12px 0 0 0; color: #64748B; font-size: 12px; text-align: center;">
+                    📋 Para ver las autorizaciones vigentes ve a la pestaña <strong style="color: #003C88;">Perfil</strong>
+                </p>
             </div>
         </div>
 
@@ -3324,7 +3656,24 @@ body {
             <!-- Nota informativa -->
             <div style="background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 12px; padding: 16px;">
                 <p style="margin: 0; color: #92400E; font-size: 13px; line-height: 1.5;">
-                    <strong>💡 Nota:</strong> Los puntos se revisan mensualmente. Mantén un nivel Excelente (≥25 pts) para obtener beneficios adicionales en seguridad.
+                    <strong>💡 Nota:</strong> Los puntos se revisan mensualmente. Mantén un nivel Muy buena (≥12 pts) para obtener beneficios adicionales en seguridad.
+                </p>
+            </div>
+
+            <!-- Aviso acción formativa -->
+            <div style="background: white; border-radius: 12px; padding: 16px; margin-top: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; align-items: flex-start; gap: 12px;">
+                <span style="font-size: 24px; flex-shrink: 0;">🔔</span>
+                <p style="margin: 0; color: #374151; font-size: 13px; line-height: 1.6;">
+                    Cuando tengas menos de 4 puntos se te convocará a una acción formativa con la que podrás receperar 4 puntos
+                </p>
+            </div>
+
+            <!-- Alerta Roja -->
+            <div style="background: white; border-radius: 12px; padding: 16px; margin-top: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; align-items: flex-start; gap: 12px;">
+                <span style="font-size: 24px; flex-shrink: 0;">🚫</span>
+                <p style="margin: 0; color: #374151; font-size: 13px; line-height: 1.6;">
+                    <strong style="color: #DC2626;">Alerta Roja:</strong><br>
+                    Si un trabajador llega a no tener puntos se llevará a cabo un comité para analizar lo ocurrido y las líneas de mejora.
                 </p>
             </div>
         </div>
@@ -3376,7 +3725,7 @@ body {
                             </svg>
                         </div>
                         <div>
-                            <p style="margin: 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Delegación</p>
+                            <p style="margin: 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">DEL-Centro</p>
                             <p id="worker-delegation-text" style="margin: 4px 0 0 0; color: #1E293B; font-size: 14px; font-weight: 500; line-height: 1.4;">729 - MTTO REFORMAS ANDALUCIA ORIENT</p>
                         </div>
                     </div>
@@ -3576,9 +3925,12 @@ body {
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>
-            <span style="font-size: 10px; font-weight: 500;">Info</span>
+            <span style="font-size: 10px; font-weight: 500;">Info.Autorizaciones</span>
         </button>
     </div>
+
+    <!-- Botón dark mode (worker) -->
+    <button class="dark-toggle-btn" id="dark-toggle-worker" onclick="toggleDarkMode()" title="Modo oscuro">🌙</button>
 
 </div>
  
@@ -3587,8 +3939,11 @@ body {
     <!-- ============================================ -->
     <div id="admin-app" class="hidden">
         
+        <!-- Overlay para cerrar sidebar en mobile -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleAdminSidebar()"></div>
+
         <!-- SIDEBAR MEJORADO -->
-        <div class="admin-sidebar">
+        <div class="admin-sidebar" id="admin-sidebar">
             <!-- Header -->
             <div class="sidebar-header-fixed">
                 <div class="logo-container">
@@ -3656,9 +4011,18 @@ body {
 
             <!-- TOPBAR -->
             <div class="admin-topbar">
-                <div>
-                    <div class="admin-topbar-title" id="admin-topbar-title">Dashboard</div>
-                    <div class="admin-topbar-sub" id="admin-topbar-sub">Resumen general del sistema PRL</div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <button class="admin-hamburger" onclick="toggleAdminSidebar()" aria-label="Menú">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div>
+                        <div class="admin-topbar-title" id="admin-topbar-title">Dashboard</div>
+                        <div class="admin-topbar-sub" id="admin-topbar-sub">Resumen general del sistema PRL</div>
+                    </div>
                 </div>
                 <div class="admin-topbar-right">
                     <div class="admin-topbar-badge">
@@ -3712,11 +4076,17 @@ body {
 
                 <div class="charts-grid">
                     <div class="chart-card">
-                        <div class="chart-title">📊 Evolución de puntos</div>
-                        <div class="bar-chart-container" id="evolution-chart"></div>
+                        <div class="chart-title">📊 Top trabajadores por puntos</div>
+                        <p class="chart-subtitle">Los 6 trabajadores con más puntos</p>
+                        <div class="bar-chart-wrapper">
+                            <div class="bar-grid-lines" id="bar-grid-lines"></div>
+                            <div class="bar-y-axis" id="bar-y-axis"></div>
+                            <div class="bar-chart-area" id="evolution-chart"></div>
+                        </div>
                     </div>
                     <div class="chart-card">
                         <div class="chart-title">🎯 Distribución por niveles</div>
+                        <p class="chart-subtitle">Estado actual del equipo</p>
                         <div class="donut-container">
                             <div class="donut-chart">
                                 <svg viewBox="0 0 200 200" id="level-donut"></svg>
@@ -3739,7 +4109,7 @@ body {
                         <thead>
                             <tr>
                                 <th>Trabajador</th>
-                                <th>Delegación</th>
+                                <th>DEL-Centro</th>
                                 <th>Puntos</th>
                                 <th>Nivel</th>
                             </tr>
@@ -3779,7 +4149,7 @@ body {
                             <input type="text" id="worker-search" placeholder="Buscar por nombre y apellidos…">
                         </div>
                         <select id="delegation-filter">
-                            <option value="all">Todas las delegaciones</option>
+                            <option value="all">Todos los centros</option>
                             <option value="533 - MTTO. INSTALAC ANDALUCIA OCCID">533 - Andalucía Occ.</option>
                             <option value="539 - MTTO ELECTR MT/BT AND OCCID">539 - Elec. MT/BT Occ.</option>
                             <option value="709 - MTTO. INSTALAC ANDALUCIA ORIEN">709 - Andalucía Or.</option>
@@ -3789,9 +4159,9 @@ body {
                         </select>
                         <select id="level-filter">
                             <option value="all">Todos los niveles</option>
-                            <option value="Excelente">🟢 Excelente</option>
-                            <option value="Regular">🟡 Regular</option>
-                            <option value="Necesita mejora">🔴 Necesita mejora</option>
+                            <option value="Muy buena">🟢 Muy buena</option>
+                            <option value="Aceptable">🟡 Aceptable</option>
+                            <option value="Deficiente">🔴 Deficiente</option>
                         </select>
                         <select id="role-filter" onchange="filterWorkers()">
                             <option value="all">Todos los roles</option>
@@ -3803,11 +4173,16 @@ body {
                 </div>
                 
                 <div class="admin-table-card">
+                    <!-- Barra de resultados de filtro -->
+                    <div class="filter-results-bar" id="filter-results-bar" style="display:none;">
+                        <span><span class="count" id="filter-count">0</span> trabajadores encontrados</span>
+                        <button class="filter-clear-btn" onclick="clearFilters()">✕ Limpiar filtros</button>
+                    </div>
                     <table>
                         <thead>
                             <tr>
                                 <th>Trabajador</th>
-                                <th>Delegación</th>
+                                <th>DEL-Centro</th>
                                 <th>Puntos</th>
                                 <th>Nivel</th>
                                 <th>Estado</th>
@@ -3944,7 +4319,7 @@ body {
     <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:24px;margin-top:24px;">
         <!-- Puntos por Delegación -->
         <div class="chart-card">
-            <div class="chart-title">📈 Puntos por Delegación</div>
+            <div class="chart-title">📈 Puntos por DEL-Centro</div>
             <div id="delegation-chart" style="height:280px;padding:10px 0;"></div>
         </div>
         
@@ -4027,13 +4402,13 @@ body {
             <div class="config-grid">
                 <div class="config-field">
                     <label>Puntos iniciales para nuevos trabajadores</label>
-                    <input type="number" id="config-initial-points" value="20" min="0" max="100">
+                    <input type="number" id="config-initial-points" value="12" min="0" max="100">
                     <span class="config-hint">Puntos que recibirá un trabajador al ser dado de alta</span>
                 </div>
                 <div class="config-field">
                     <label>Umbral de alerta (puntos mínimos)</label>
-                    <input type="number" id="config-alert-threshold" value="5" min="0" max="50">
-                    <span class="config-hint">Por debajo de este valor se considera "Necesita mejora"</span>
+                    <input type="number" id="config-alert-threshold" value="4" min="0" max="50">
+                    <span class="config-hint">Por debajo de este valor se considera "Deficiente"</span>
                 </div>
             </div>
         </div>
@@ -4155,19 +4530,20 @@ body {
             <input type="email" id="new-worker-email" placeholder="ejemplo@elecnor.es">
             
             <div id="worker-only-fields">
-                <label>Delegación</label>
-                <select id="new-worker-delegation">
+                <label>DEL-Centro</label>
+                <select id="new-worker-delegation" onchange="handleNewDelegationChange(this, 'new')">
                     <option value="" disabled selected>Selecciona una delegación</option>
-                    <option value="533 - MTTO. INSTALAC ANDALUCIA OCCID">533 - MTTO. INSTALAC ANDALUCIA OCCID</option>
-                    <option value="539 - MTTO ELECTR MT/BT AND OCCID">539 - MTTO ELECTR MT/BT AND OCCID</option>
-                    <option value="709 - MTTO. INSTALAC ANDALUCIA ORIEN">709 - MTTO. INSTALAC ANDALUCIA ORIEN</option>
-                    <option value="729 - MTTO REFORMAS ANDALUCIA ORIENT">729 - MTTO REFORMAS ANDALUCIA ORIENT</option>
-                    <option value="720 - MTTO ELECTR MT/BT AND ORIENT">720 - MTTO ELECTR MT/BT AND ORIENT</option>
-                    <option value="728 - MTTO REFORMAS ANDALUCIA OCCIDE">728 - MTTO REFORMAS ANDALUCIA OCCIDE</option>
                 </select>
+                <div id="new-delegation-input-wrap" style="display:none; margin-top:8px; display:none;">
+                    <input type="text" id="new-delegation-custom" placeholder="Nombre de la nueva delegación" style="width:100%; margin-bottom:6px;">
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" onclick="confirmNewDelegation('new')" style="flex:1; background:#003C88; color:white; border:none; border-radius:8px; padding:8px; font-size:13px; font-weight:600; cursor:pointer;">✔ Añadir</button>
+                        <button type="button" onclick="cancelNewDelegation('new')" style="flex:1; background:#F1F5F9; color:#64748B; border:none; border-radius:8px; padding:8px; font-size:13px; cursor:pointer;">Cancelar</button>
+                    </div>
+                </div>
                 
                 <label>Puntos iniciales</label>
-                <input type="number" id="new-worker-points" value="20" min="0" max="100">
+                <input type="number" id="new-worker-points" value="12" min="0" max="100">
             </div>
             
             <label>Estado</label>
@@ -4203,15 +4579,16 @@ body {
             <input type="email" id="edit-worker-email">
             
             <div id="edit-worker-only-fields">
-                <label>Delegación</label>
-                <select id="edit-worker-delegation">
-                    <option value="533 - MTTO. INSTALAC ANDALUCIA OCCID">533 - MTTO. INSTALAC ANDALUCIA OCCID</option>
-                    <option value="539 - MTTO ELECTR MT/BT AND OCCID">539 - MTTO ELECTR MT/BT AND OCCID</option>
-                    <option value="709 - MTTO. INSTALAC ANDALUCIA ORIEN">709 - MTTO. INSTALAC ANDALUCIA ORIEN</option>
-                    <option value="729 - MTTO REFORMAS ANDALUCIA ORIENT">729 - MTTO REFORMAS ANDALUCIA ORIENT</option>
-                    <option value="720 - MTTO ELECTR MT/BT AND ORIENT">720 - MTTO ELECTR MT/BT AND ORIENT</option>
-                    <option value="728 - MTTO REFORMAS ANDALUCIA OCCIDE">728 - MTTO REFORMAS ANDALUCIA OCCIDE</option>
+                <label>DEL-Centro</label>
+                <select id="edit-worker-delegation" onchange="handleNewDelegationChange(this, 'edit')">
                 </select>
+                <div id="edit-delegation-input-wrap" style="display:none;">
+                    <input type="text" id="edit-delegation-custom" placeholder="Nombre de la nueva delegación" style="width:100%; margin-bottom:6px; margin-top:8px;">
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" onclick="confirmNewDelegation('edit')" style="flex:1; background:#003C88; color:white; border:none; border-radius:8px; padding:8px; font-size:13px; font-weight:600; cursor:pointer;">✔ Añadir</button>
+                        <button type="button" onclick="cancelNewDelegation('edit')" style="flex:1; background:#F1F5F9; color:#64748B; border:none; border-radius:8px; padding:8px; font-size:13px; cursor:pointer;">Cancelar</button>
+                    </div>
+                </div>
                 
                 <label>Puntos</label>
                 <input type="number" id="edit-worker-points">
@@ -4398,6 +4775,9 @@ body {
         </div> <!-- CIERRA admin-content-area -->
         </div> <!-- CIERRA admin-main -->
 
+        <!-- Botón dark mode (admin) -->
+        <button class="dark-toggle-btn" id="dark-toggle-admin" onclick="toggleDarkMode()" title="Modo oscuro" style="bottom:24px;right:24px;">🌙</button>
+
   </div> <!-- CIERRA admin-app -->
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -4494,12 +4874,12 @@ body {
 
         function getLevelInfo(points) {
             points = points || 0;
-            if (points >= 20) {
-                return { name: 'Excelente', class: 'excelente', color: '#6FB86F' };
-            } else if (points >= 10) {
-                return { name: 'Regular', class: 'regular', color: '#F6C223' };
+            if (points >= 12) {
+                return { name: 'Muy buena', class: 'excelente', color: '#6FB86F' };
+            } else if (points >= 5) {
+                return { name: 'Aceptable', class: 'regular', color: '#F6C223' };
             } else {
-                return { name: 'Necesita mejora', class: 'mejora', color: '#E55B5B' };
+                return { name: 'Deficiente', class: 'mejora', color: '#E55B5B' };
             }
         }
 
@@ -4540,7 +4920,7 @@ body {
                     name: 'Mateo Castañer Almiron', 
                     email: 'mateocastaner@elecnor.es', 
                     delegation: '728 - MTTO REFORMAS ANDALUCIA OCCIDE', 
-                    points: 20, 
+                    points: 12, 
                     status: 'Activo',
                     role: 'worker',
                     puntosHistory: [],
@@ -4575,7 +4955,7 @@ body {
                     id: 98, 
                     name: 'Admin PRL', 
                     email: 'admin@elecnor.es', 
-                    delegation: 'Central', 
+                    delegation: 'Delegación Mantenimiento Sur', 
                     points: 0, 
                     status: 'Activo',
                     role: 'admin',
@@ -4587,7 +4967,7 @@ body {
                     id: 99, 
                     name: 'Manuel Quintaña', 
                     email: 'mquintanaocaña@elecnor.es', 
-                    delegation: 'Central', 
+                    delegation: 'Delegación Mantenimiento Sur', 
                     points: 0, 
                     status: 'Activo',
                     role: 'admin',
@@ -4610,7 +4990,7 @@ body {
                 if (pointsInput) pointsInput.value = '0';
             } else {
                 workerFields.style.display = 'block';
-                if (pointsInput) pointsInput.value = '20';
+                if (pointsInput) pointsInput.value = '12';
             }
         }
 
@@ -4632,11 +5012,19 @@ body {
                 var saved = localStorage.getItem(WORKERS_KEY);
                 if (saved) {
                     workersList = JSON.parse(saved);
+                    var migrated = false;
                     workersList.forEach(function(w) {
                         if (!w.puntosHistory) w.puntosHistory = [];
                         if (!w.authorizations) w.authorizations = [];
                         if (!w.authHistory) w.authHistory = [];
+                        // Migración: admins/visores con "Central" → "Delegación Mantenimiento Sur"
+                        if ((w.role === 'admin' || w.role === 'visor') && 
+                            (w.delegation === 'Central' || !w.delegation)) {
+                            w.delegation = 'Delegación Mantenimiento Sur';
+                            migrated = true;
+                        }
                     });
+                    if (migrated) saveWorkers();
                 } else {
                     workersList = getInitialWorkers();
                     saveWorkers();
@@ -4808,6 +5196,7 @@ body {
             }
             
             window.currentWorker = worker;
+            window.currentWorkerData = worker; // alias for QR/PDF
             
             hideAllScreens();
             
@@ -4944,27 +5333,27 @@ function updateWorkerUI(worker) {
     
     // Activar chip correspondiente
     var statusText = '';
-    if (currentPoints >= 25) {
+    if (currentPoints >= 12) {
         if (chipExcelente) {
             chipExcelente.style.opacity = '1';
             chipExcelente.style.borderColor = '#22C55E';
             chipExcelente.style.background = '#DCFCE7';
         }
-        statusText = '⭐ Excelente';
-    } else if (currentPoints >= 10) {
+        statusText = '⭐ Muy buena';
+    } else if (currentPoints >= 5) {
         if (chipRegular) {
             chipRegular.style.opacity = '1';
             chipRegular.style.borderColor = '#EAB308';
             chipRegular.style.background = '#FEF9C3';
         }
-        statusText = '➖ Regular';
+        statusText = '➖ Aceptable';
     } else {
         if (chipMejora) {
             chipMejora.style.opacity = '1';
             chipMejora.style.borderColor = '#DC2626';
             chipMejora.style.background = '#FEE2E2';
         }
-        statusText = '⚠️ Necesita mejora';
+        statusText = '⚠️ Deficiente';
     }
     
     if (statusBadge) statusBadge.textContent = statusText;
@@ -5252,8 +5641,8 @@ function animateValue(element, start, end, duration) {
             var countExc = 0, countReg = 0, countNeed = 0;
             data.forEach(function(w) {
                 var p = w.points || 0;
-                if (p >= 20) countExc++;
-                else if (p >= 10) countReg++;
+                if (p >= 12) countExc++;
+                else if (p >= 5) countReg++;
                 else countNeed++;
             });
             
@@ -5278,8 +5667,8 @@ function animateValue(element, start, end, duration) {
             }
             
             var segments = [
-                {value: exc, color: '#6FB86F', label: 'Excelente'},
-                {value: reg, color: '#F6C223', label: 'Regular'},
+                {value: exc, color: '#6FB86F', label: 'Muy buena'},
+                {value: reg, color: '#F6C223', label: 'Aceptable'},
                 {value: need, color: '#E55B5B', label: 'Necesita mejora'}
             ];
             
@@ -5310,27 +5699,47 @@ function animateValue(element, start, end, duration) {
 
         function updateBarChart(data) {
             var container = document.getElementById('evolution-chart');
+            var yAxis = document.getElementById('bar-y-axis');
+            var gridLines = document.getElementById('bar-grid-lines');
             if (!container) return;
-            
+
             var sorted = data.slice().sort(function(a,b) {
                 return (b.points || 0) - (a.points || 0);
             }).slice(0, 6);
-            
-            var maxPoints = sorted.length > 0 ? sorted[0].points : 100;
-            if (maxPoints === 0) maxPoints = 100;
-            
+
+            var maxPoints = sorted.length > 0 ? Math.max(sorted[0].points || 0, 1) : 20;
+            var roundedMax = Math.ceil(maxPoints / 5) * 5;
+
+            // Eje Y
+            if (yAxis) {
+                var yHtml = '';
+                for (var yi = 4; yi >= 0; yi--) {
+                    yHtml += '<span class="bar-y-label">' + Math.round(roundedMax * yi / 4) + '</span>';
+                }
+                yAxis.innerHTML = yHtml;
+            }
+
+            // Grid lines
+            if (gridLines) {
+                var glHtml = '';
+                for (var gi = 0; gi < 5; gi++) glHtml += '<div class="bar-grid-line"></div>';
+                gridLines.innerHTML = glHtml;
+            }
+
+            // Barras con tooltip y color por nivel
             var html = '';
             sorted.forEach(function(worker) {
-                var height = maxPoints > 0 ? (worker.points / maxPoints) * 100 : 0;
+                var pct = roundedMax > 0 ? Math.max((worker.points / roundedMax) * 100, 4) : 4;
                 var initials = getInitials(worker.name);
-                
+                var levelInfo = getLevelInfo(worker.points);
                 html += '<div class="bar-item">' +
-                    '<div class="bar" style="height:' + Math.max(height, 10) + '%">' +
+                    '<div class="bar" style="height:' + pct + '%;background:linear-gradient(180deg,' + levelInfo.color + ' 0%,' + levelInfo.color + 'CC 100%);box-shadow:0 4px 12px ' + levelInfo.color + '40;">' +
+                    '<div class="bar-tooltip">' + worker.name.split(' ')[0] + ': ' + worker.points + ' pts</div>' +
                     '<div class="bar-value">' + worker.points + '</div></div>' +
                     '<div class="bar-label">' + initials + '</div></div>';
             });
-            
-            container.innerHTML = html;
+
+            container.innerHTML = html || '<div style="color:var(--text-faint);font-size:13px;padding:40px;text-align:center;">Sin datos</div>';
         }
 
         function updateTopWorkersTable(data) {
@@ -5410,6 +5819,7 @@ function animateValue(element, start, end, duration) {
             var role = roleSelect ? roleSelect.value : 'all';
             
             var rows = document.querySelectorAll('#admin-workers-section tbody tr');
+            var visible = 0;
             rows.forEach(function(row) {
                 var rowDelegation = row.cells[1] ? row.cells[1].textContent.trim() : '';
                 var rowLevelCell = row.cells[3] ? row.cells[3].textContent.trim() : '';
@@ -5427,8 +5837,19 @@ function animateValue(element, start, end, duration) {
                     matchesLevel = rowLevelCell.toLowerCase().indexOf(level.toLowerCase()) !== -1;
                 }
                 
-                row.style.display = (matchesSearch && matchesDelegation && matchesLevel && matchesRole) ? '' : 'none';
+                var show = matchesSearch && matchesDelegation && matchesLevel && matchesRole;
+                row.style.display = show ? '' : 'none';
+                if (show) visible++;
             });
+
+            // Barra de resultados
+            var bar = document.getElementById('filter-results-bar');
+            var countEl = document.getElementById('filter-count');
+            var hasFilter = search || delegation !== 'all' || level !== 'all' || role !== 'all';
+            if (bar) {
+                bar.style.display = hasFilter ? 'flex' : 'none';
+                if (countEl) countEl.textContent = visible;
+            }
         }
 
         // ============================================
@@ -5473,9 +5894,9 @@ function animateValue(element, start, end, duration) {
             
             if (role === 'worker') {
                 delegation = document.getElementById('new-worker-delegation').value;
-                points = parseInt(document.getElementById('new-worker-points').value) || 20;
+                points = parseInt(document.getElementById('new-worker-points').value) || 12;
             } else {
-                delegation = 'Central';
+                delegation = 'Delegación Mantenimiento Sur';
                 points = 0;
             }
             
@@ -5535,6 +5956,12 @@ function animateValue(element, start, end, duration) {
             toggleEditWorkerFields();
             
             if (worker.role !== 'admin') {
+                // Si la delegación del trabajador no está en la lista, añadirla temporalmente
+                if (worker.delegation && defaultDelegations.indexOf(worker.delegation) === -1) {
+                    defaultDelegations.push(worker.delegation);
+                    saveDelegations();
+                }
+                populateDelegationSelects(worker.delegation);
                 document.getElementById('edit-worker-delegation').value = worker.delegation || '';
                 document.getElementById('edit-worker-points').value = worker.points || 0;
             }
@@ -5582,7 +6009,7 @@ function animateValue(element, start, end, duration) {
                 worker.delegation = document.getElementById('edit-worker-delegation').value;
                 worker.points = parseInt(document.getElementById('edit-worker-points').value) || 0;
             } else {
-                worker.delegation = 'Central';
+                worker.delegation = 'Delegación Mantenimiento Sur';
                 worker.points = 0;
             }
             
@@ -6214,9 +6641,9 @@ function animateValue(element, start, end, duration) {
             workersList.forEach(function(w) {
                 var p = w.points || 0;
                 total += p;
-                if (p <= 5) alerta++;
-                if (p < 20) {
-                    perdidos += (20 - p);
+                if (p <= 4) alerta++;
+                if (p < 12) {
+                    perdidos += (12 - p);
                 }
                 if (w.puntosHistory) {
                     w.puntosHistory.forEach(function(h) {
@@ -6309,8 +6736,8 @@ function animateValue(element, start, end, duration) {
             var exc = 0, reg = 0, mej = 0;
             workersList.forEach(function(w) {
                 var p = w.points || 0;
-                if (p >= 20) exc++;
-                else if (p >= 10) reg++;
+                if (p >= 12) exc++;
+                else if (p >= 5) reg++;
                 else mej++;
             });
             
@@ -6601,7 +7028,7 @@ function animateValue(element, start, end, duration) {
         function saveConfig() {
             configData.orgName = document.getElementById('config-org-name').value;
             configData.contactEmail = document.getElementById('config-contact-email').value;
-            configData.initialPoints = parseInt(document.getElementById('config-initial-points').value) || 20;
+            configData.initialPoints = parseInt(document.getElementById('config-initial-points').value) || 12;
             configData.alertThreshold = parseInt(document.getElementById('config-alert-threshold').value) || 5;
             
             var emailNotif = document.getElementById('config-notif-email');
@@ -7086,11 +7513,134 @@ function animateValue(element, start, end, duration) {
             }
         }
 
+        // ============================================
+        // GESTIÓN DE DELEGACIONES
+        // ============================================
+
+        var DELEGATIONS_KEY = 'carnet_delegations_v1';
+
+        var defaultDelegations = [
+            'Delegación Mantenimiento Sur',
+            '533 - MTTO. INSTALAC ANDALUCIA OCCID',
+            '539 - MTTO ELECTR MT/BT AND OCCID',
+            '709 - MTTO. INSTALAC ANDALUCIA ORIEN',
+            '729 - MTTO REFORMAS ANDALUCIA ORIENT',
+            '720 - MTTO ELECTR MT/BT AND ORIENT',
+            '728 - MTTO REFORMAS ANDALUCIA OCCIDE'
+        ];
+
+        function loadDelegations() {
+            try {
+                var saved = localStorage.getItem(DELEGATIONS_KEY);
+                if (saved) {
+                    var custom = JSON.parse(saved);
+                    // Merge: defaults primero, luego las custom que no estén ya
+                    custom.forEach(function(d) {
+                        if (defaultDelegations.indexOf(d) === -1) {
+                            defaultDelegations.push(d);
+                        }
+                    });
+                }
+            } catch(e) {}
+        }
+
+        function saveDelegations() {
+            try {
+                localStorage.setItem(DELEGATIONS_KEY, JSON.stringify(defaultDelegations));
+            } catch(e) {}
+        }
+
+        function populateDelegationSelects(selectedValue) {
+            var selects = ['new-worker-delegation', 'edit-worker-delegation'];
+            selects.forEach(function(id) {
+                var sel = document.getElementById(id);
+                if (!sel) return;
+                var current = selectedValue !== undefined ? selectedValue : sel.value;
+                sel.innerHTML = '';
+                if (id === 'new-worker-delegation') {
+                    var placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.disabled = true;
+                    placeholder.textContent = 'Selecciona una delegación';
+                    sel.appendChild(placeholder);
+                    if (!current) placeholder.selected = true;
+                }
+                defaultDelegations.forEach(function(d) {
+                    var opt = document.createElement('option');
+                    opt.value = d;
+                    opt.textContent = d;
+                    if (d === current) opt.selected = true;
+                    sel.appendChild(opt);
+                });
+                // Opción crear nueva
+                var newOpt = document.createElement('option');
+                newOpt.value = '__nueva__';
+                newOpt.textContent = '➕ Crear nueva delegación...';
+                sel.appendChild(newOpt);
+            });
+
+            // Actualizar también el filtro del panel admin
+            populateDelegationFilter();
+        }
+
+        function populateDelegationFilter() {
+            var filter = document.getElementById('delegation-filter');
+            if (!filter) return;
+            var current = filter.value || 'all';
+            filter.innerHTML = '<option value="all">Todos los centros</option>';
+            defaultDelegations.forEach(function(d) {
+                var opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                if (d === current) opt.selected = true;
+                filter.appendChild(opt);
+            });
+        }
+
+        function handleNewDelegationChange(sel, context) {
+            var wrapId = context + '-delegation-input-wrap';
+            var wrap = document.getElementById(wrapId);
+            if (sel.value === '__nueva__') {
+                if (wrap) wrap.style.display = 'block';
+                var input = document.getElementById(context + '-delegation-custom');
+                if (input) { input.value = ''; input.focus(); }
+            } else {
+                if (wrap) wrap.style.display = 'none';
+            }
+        }
+
+        function confirmNewDelegation(context) {
+            var input = document.getElementById(context + '-delegation-custom');
+            var name = input ? input.value.trim() : '';
+            if (!name) { alert('Escribe un nombre para la nueva delegación'); return; }
+            if (defaultDelegations.indexOf(name) !== -1) {
+                alert('Esa delegación ya existe');
+                return;
+            }
+            defaultDelegations.push(name);
+            saveDelegations();
+            populateDelegationSelects(name);
+            // Seleccionar en el select actual
+            var sel = document.getElementById(context + '-worker-delegation');
+            if (sel) sel.value = name;
+            var wrap = document.getElementById(context + '-delegation-input-wrap');
+            if (wrap) wrap.style.display = 'none';
+        }
+
+        function cancelNewDelegation(context) {
+            var sel = document.getElementById(context + '-worker-delegation');
+            if (sel) sel.value = sel.options[0] ? sel.options[0].value : '';
+            var wrap = document.getElementById(context + '-delegation-input-wrap');
+            if (wrap) wrap.style.display = 'none';
+        }
+
         function init() {
             console.log('>>> Inicializando aplicación...');
             
             loadWorkers();
             loadConfig();
+            loadDelegations();
+            populateDelegationSelects();
             
             initEventListeners();
             
@@ -7143,7 +7693,7 @@ function animateValue(element, start, end, duration) {
                             provincia: (row[8] || '').toString().trim(),
                             empresa: (row[10] || '').toString().trim(),
                             fechaIngreso: (row[6] || '').toString().trim(),
-                            points: 20,
+                            points: 12,
                             status: 'Activo',
                             role: esAdmin ? 'admin' : 'worker',
                             puntosHistory: [],
@@ -7158,10 +7708,10 @@ function animateValue(element, start, end, duration) {
                     assignWorkersData = workersList.map(function(w) { return Object.assign({}, w); });
                     renderWorkersTable();
                     input.value = '';
-                    alert('Importacion completada: ' + importados + ' trabajadores importados.' + (duplicados > 0 ? ' ' + duplicados + ' duplicados omitidos.' : '') + ' Todos con 20 puntos iniciales.');
+                    alert('Importacion completada: ' + importados + ' trabajadores importados.' + (duplicados > 0 ? ' ' + duplicados + ' duplicados omitidos.' : '') + ' Todos con 12 puntos iniciales.');
                 } catch(err) {
                     console.error('Error importando Excel:', err);
-                    alert('Error al leer el Excel: ' + err.message);
+                    alert('❌ Error al leer el Excel: ' + err.message);
                     input.value = '';
                 }
             };
@@ -7174,6 +7724,144 @@ function animateValue(element, start, end, duration) {
             init();
         });
 
+        // ============================================
+        // TOAST SYSTEM — reemplaza alert()
+        // ============================================
+        function showToast(msg, type, duration) {
+            type = type || 'info';
+            duration = duration || 3400;
+            var container = document.getElementById('toast-container');
+            if (!container) return;
+            var icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            var t = document.createElement('div');
+            t.className = 'toast toast-' + type;
+            t.innerHTML = '<span class="toast-icon">' + (icons[type] || 'ℹ️') + '</span><span class="toast-msg">' + msg + '</span>';
+            container.appendChild(t);
+            setTimeout(function() {
+                t.classList.add('toast-out');
+                setTimeout(function() { if (t.parentNode) t.parentNode.removeChild(t); }, 300);
+            }, duration);
+        }
+
+        // Polyfill: sobrescribir alert() global con toast
+        window._nativeAlert = window.alert;
+        window.alert = function(msg) {
+            var type = 'info';
+            var lower = String(msg).toLowerCase();
+            if (lower.includes('error') || lower.includes('fallo') || lower.includes('no se pudo')) type = 'error';
+            else if (lower.includes('completad') || lower.includes('guardad') || lower.includes('correctamente') || lower.includes('importad') || lower.includes('éxito') || lower.includes('✅')) type = 'success';
+            else if (lower.includes('alerta') || lower.includes('advertencia') || lower.includes('duplicad')) type = 'warning';
+            showToast(msg, type);
+        };
+
+        // ============================================
+        // HAMBURGER — sidebar mobile admin
+        // ============================================
+        function toggleAdminSidebar() {
+            var sidebar = document.getElementById('admin-sidebar');
+            var overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar) return;
+            var isOpen = sidebar.classList.contains('sidebar-open');
+            if (isOpen) {
+                sidebar.classList.remove('sidebar-open');
+                if (overlay) overlay.classList.remove('visible');
+            } else {
+                sidebar.classList.add('sidebar-open');
+                if (overlay) overlay.classList.add('visible');
+            }
+        }
+
+        // Cerrar sidebar al navegar en mobile
+        var _origShowAdminPage = typeof showAdminPage === 'function' ? showAdminPage : null;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 900) {
+                        var sidebar = document.getElementById('admin-sidebar');
+                        var overlay = document.getElementById('sidebar-overlay');
+                        if (sidebar) sidebar.classList.remove('sidebar-open');
+                        if (overlay) overlay.classList.remove('visible');
+                    }
+                });
+            });
+        });
+
+        // ============================================
+        // MODO OSCURO
+        // ============================================
+        function toggleDarkMode() {
+            var isDark = document.body.classList.toggle('dark-mode');
+            try { localStorage.setItem('carnet_dark_mode', isDark ? '1' : '0'); } catch(e) {}
+            document.querySelectorAll('.dark-toggle-btn').forEach(function(btn) {
+                btn.textContent = isDark ? '☀️' : '🌙';
+            });
+            showToast(isDark ? 'Modo oscuro activado' : 'Modo claro activado', 'info', 2000);
+        }
+
+        // Aplicar dark mode guardado al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                if (localStorage.getItem('carnet_dark_mode') === '1') {
+                    document.body.classList.add('dark-mode');
+                    document.querySelectorAll('.dark-toggle-btn').forEach(function(btn) {
+                        btn.textContent = '☀️';
+                    });
+                }
+            } catch(e) {}
+        });
+
+        // ============================================
+        // ============================================
+        // SKELETON SCREENS — mostrar al cargar tabla
+        // ============================================
+        function showTableSkeleton() {
+            var tableCard = document.querySelector('#admin-workers-section .admin-table-card');
+            if (!tableCard) return;
+            var overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.id = 'table-skeleton';
+            var html = '';
+            for (var i = 0; i < 6; i++) {
+                html += '<div class="skeleton-row">' +
+                    '<div class="skeleton skeleton-avatar"></div>' +
+                    '<div class="skeleton-lines">' +
+                    '<div class="skeleton skeleton-line medium"></div>' +
+                    '<div class="skeleton skeleton-line short"></div>' +
+                    '</div></div>';
+            }
+            overlay.innerHTML = html;
+            tableCard.appendChild(overlay);
+            setTimeout(function() {
+                var sk = document.getElementById('table-skeleton');
+                if (sk) {
+                    sk.style.opacity = '0';
+                    sk.style.transition = 'opacity 0.3s';
+                    setTimeout(function() { if (sk.parentNode) sk.parentNode.removeChild(sk); }, 300);
+                }
+            }, 600);
+        }
+
+        // Skeleton: se llama manualmente al navegar a sección trabajadores
+
+        // ============================================
+        // LIMPIAR FILTROS
+        // ============================================
+        function clearFilters() {
+            var s = document.getElementById('worker-search');
+            var d = document.getElementById('delegation-filter');
+            var l = document.getElementById('level-filter');
+            var r = document.getElementById('role-filter');
+            if (s) s.value = '';
+            if (d) d.value = 'all';
+            if (l) l.value = 'all';
+            if (r) r.value = 'all';
+            filterWorkers();
+            showToast('Filtros eliminados', 'info', 1800);
+        }
+
     </script>
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
 </body>
 </html>
