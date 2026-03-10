@@ -3179,7 +3179,7 @@ body {
             <!-- Tarjeta Principal de Puntos con Círculo de Progreso -->
             <div class="points-hero-card">
                 <div style="position: relative; z-index: 2; text-align: center;">
-                    <p style="margin: 0 0 16px 0; color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;">Carnet de Puntos PRL</p>
+                    <p style="margin: 0 0 16px 0; color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;">Carnet de Puntos en Prevención</p>
                     
                     <!-- Círculo de Progreso SVG -->
                     <div style="position: relative; width: 170px; height: 170px; margin: 0 auto 20px;">
@@ -3207,6 +3207,8 @@ body {
                         <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%; box-shadow: 0 0 0 3px rgba(34,197,94,0.3); display: inline-block;"></span>
                         <span id="worker-status-text" style="color: white; font-size: 13px; font-weight: 600;">Excelente</span>
                     </div>
+                    <!-- Delegación -->
+                    <p id="worker-delegation-hero" style="margin: 10px 0 0 0; color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 500; letter-spacing: 0.5px;"></p>
                 </div>
             </div>
 
@@ -4906,6 +4908,10 @@ function updateWorkerUI(worker) {
     if (initialsEl) initialsEl.textContent = getInitials(fullName);
     if (emailEl) emailEl.textContent = worker.email || '';
     if (delegationEl) delegationEl.textContent = worker.delegation || '';
+
+    // Delegación en el hero del carnet
+    var delegationHero = document.getElementById('worker-delegation-hero');
+    if (delegationHero) delegationHero.textContent = worker.delegation || '';
     
     // Actualizar avatar del saludo en inicio
     var avatarHome = document.getElementById('worker-avatar-home');
