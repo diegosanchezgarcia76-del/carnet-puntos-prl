@@ -5878,12 +5878,25 @@ body.dark-mode .filter-chip { background: rgba(244,124,0,0.15); }
 
         function getLevelInfo(points) {
             points = points || 0;
+            var isDarkMode = document.body.classList.contains('dark-mode');
             if (points >= 12) {
-                return { name: 'Muy bueno', class: 'excelente', color: '#6FB86F' };
+                return { 
+                    name: 'Muy bueno', 
+                    class: 'excelente', 
+                    color: isDarkMode ? '#86EFAC' : '#6FB86F'  // Verde brillante en dark, verde normal en light
+                };
             } else if (points >= 5) {
-                return { name: 'Aceptable', class: 'regular', color: '#F6C223' };
+                return { 
+                    name: 'Aceptable', 
+                    class: 'regular', 
+                    color: isDarkMode ? '#FCD34D' : '#F6C223'  // Amarillo brillante en dark
+                };
             } else {
-                return { name: 'Deficiente', class: 'mejora', color: '#E55B5B' };
+                return { 
+                    name: 'Deficiente', 
+                    class: 'mejora', 
+                    color: isDarkMode ? '#FCA5A5' : '#E55B5B'  // Rojo brillante en dark
+                };
             }
         }
 
@@ -6841,10 +6854,11 @@ function animateValue(element, start, end, duration) {
                 return;
             }
             
+            var isDarkMode = document.body.classList.contains('dark-mode');
             var segments = [
-                {value: exc, color: '#6FB86F', label: 'Muy bueno'},
-                {value: reg, color: '#F6C223', label: 'Aceptable'},
-                {value: need, color: '#E55B5B', label: 'Necesita mejora'}
+                {value: exc, color: isDarkMode ? '#86EFAC' : '#6FB86F', label: 'Muy bueno'},
+                {value: reg, color: isDarkMode ? '#FCD34D' : '#F6C223', label: 'Aceptable'},
+                {value: need, color: isDarkMode ? '#FCA5A5' : '#E55B5B', label: 'Necesita mejora'}
             ];
             
             var svgContent = '';
@@ -9021,6 +9035,17 @@ function animateValue(element, start, end, duration) {
                 btn.textContent = isDark ? '☀️' : '🌙';
             });
             showToast(isDark ? 'Modo oscuro activado' : 'Modo claro activado', 'info', 2000);
+            
+            // Redibujar gráficos con nuevos colores
+            try {
+                if (typeof workers !== 'undefined' && workers.length > 0) {
+                    var countExc = workers.filter(function(w) { return w.level === 'Excelente'; }).length;
+                    var countReg = workers.filter(function(w) { return w.level === 'Regular'; }).length;
+                    var countNeed = workers.filter(function(w) { return w.level === 'Necesita mejora'; }).length;
+                    updateDonutChart(countExc, countReg, countNeed, workers.length);
+                    updateBarChart(workers);
+                }
+            } catch(e) { console.log('Error actualizando gráficos:', e); }
         }
 
         // Aplicar dark mode guardado al cargar
